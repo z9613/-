@@ -1,0 +1,196 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333333;
+    line-height: 1.6;
+}
+
+.navbar, footer, .full-width-section, section {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    width: 95%;
+    padding: 20px;
+}
+
+section, .contact-section form {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+h2, h3 {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.full-width-section {
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 30px 0; /* 减少上下内边距 */
+    margin-bottom: 20px; /* 减少底部外边距 */
+    position: relative;
+}
+
+.full-width-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 50px; /* 减少顶部内边距 */
+}
+
+.content-layout section {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.content-layout section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-layout h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.about-content {
+    margin-top: 20px; /* 调整这个值以获得标题和内容之间的间距 */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.about-skills, .about-experience {
+    flex: 1;
+    max-width: 25%;
+}
+
+.about-center {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 50%;
+    padding: 0 20px;
+}
+
+.avatar-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.avatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.about-center p {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.about-skills ul li, .social-links li {
+    margin-bottom: 15px;
+}
+
+.about-skills ul li i, .social-links .fab {
+    color: #6c757d;
+    font-size: 1.3rem;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f1f3f5;
+    border-radius: 50%;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.about-skills ul li:hover i, .social-links a:hover .fab {
+    background-color: #e9ecef;
+    transform: scale(1.1);
+}
+
+.grid-item img {
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.grid-item:hover img {
+    transform: scale(1.05);
+}
+
+.form-control {
+    border: none;
+    border-bottom: 2px solid #dee2e6;
+    border-radius: 0;
+    padding: 10px 0;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #007bff;
+}
+
+.btn-primary {
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .about-skills, .about-experience, .about-center {
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .avatar-container {
+        margin-bottom: 15px;
+    }
+
+    .avatar {
+        width: 150px;
+        height: 150px;
+    }
+    
+}
+
+#about {
+    margin-top: -40px; /* 添加负的上外边距，使其向上移动 */
+}
