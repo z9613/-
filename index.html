@@ -50,60 +50,75 @@
         </button>
     </div>
 
-    <section id="about" class="py-5 bg-light">
+    <section id="about" class="py-5">
         <div class="container">
             <h2 class="text-center mb-2">关于我</h2>
             <p class="text-center text-muted mb-5">About Me</p>
             <div class="row">
-                <div class="col-md-2 mb-4">
+                <!-- 头像和介绍 -->
+                <div class="col-md-12 mb-4 text-center">
+                    <img src="tx.jpg" alt="我的头像" class="rounded-circle img-fluid mb-3" style="width: 200px; height: 200px; object-fit: cover;">
+                    <p class="mt-3">hi~我是太阳花鸭鸭鸭，在这里你可以看到我的一切！</p>
+                </div>
+                <!-- 兴趣 -->
+                <div class="col-md-3 mb-4">
                     <div class="about-item text-center">
                         <i class="fas fa-heart fa-3x mb-3 text-primary"></i>
                         <h3 class="h4 mb-3">兴趣</h3>
                         <ul class="list-unstyled">
                             <li>喜欢音乐，喜欢晴天也喜欢雨天喜欢摄影，对可爱的事物没有抵抗力，梦想是走遍全世界！</li>
-                           
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-2 mb-4">
+                <!-- 技能 -->
+                <div class="col-md-3 mb-4">
                     <div class="about-item text-center">
                         <i class="fas fa-code fa-3x mb-3 text-success"></i>
                         <h3 class="h4 mb-3">技能</h3>
                         <ul class="list-unstyled">
-                            <li>摄影</li>
-                            <li>设计</li>
-                            <li>编程</li>
+                            <li>摄影：可以拍人像也可以拍产品，喜欢用光影来表现情绪</li>
+                            <li>设计：喜欢用ps和pr，喜欢研究色彩搭配。会ae达芬奇等剪辑软件和特效软件。能够独立修片和剪辑</li>
+                            <li>编程：喜欢用html+css+js，喜欢用bootstrap和jquery</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div class="about-item text-center">
-                        <img src="tx.jpg" alt="我的头像" class="rounded-circle img-fluid mb-3" style="width: 200px; height: 200px; object-fit: cover;">
-                        <p>hi~我是太阳花鸭鸭鸭，在这里你可以看到我的一切！</p>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4">
+                <!-- 经历 -->
+                <div class="col-md-3 mb-4">
                     <div class="about-item text-center">
                         <i class="fas fa-briefcase fa-3x mb-3 text-info"></i>
                         <h3 class="h4 mb-3">经历</h3>
                         <ul class="list-unstyled">
-                            <li>工作经历1</li>
-                            <li>教育经历</li>
-                            <li>重要成就</li>
+                            <li>邯郸职业技术学院，专科。大学期间就已经由导师引荐到摄影工作室工作，能够独立完成摄影和设计工作，平时会做画册海报等类的设计工作。后来从事新闻编辑和中华网生活频道的后台管理工作。再后就业与老家县城里房地产公司做抖音短视频拍摄剪辑工作，现就业与天津市西青区北咖易购设计装饰有限公司，岗位是新媒体运营。</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-2 mb-4">
+                <!-- 目标 -->
+                <div class="col-md-3 mb-4">
                     <div class="about-item text-center">
                         <i class="fas fa-bullseye fa-3x mb-3 text-danger"></i>
                         <h3 class="h4 mb-3">目标</h3>
                         <ul class="list-unstyled">
-                            <li>成为全栈开发者</li>
-                            <li>环游世界</li>
-                            <li>持续学习</li>
+                            <li>希望有一天能够实现财富自由！</li>
+                            <li>希望我的家人不会变老，无病无灾！</li>
                         </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+    
+   
+    <!-- 新增的照片叠放区域 -->
+    <section id="photo-stack" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-2">我的照片墙</h2>
+            <p class="text-center text-muted mb-5">My Photo Wall</p>
+            <div class="photo-stack-container">
+                <div class="photo-item" style="background-image: url('zp1.jpg');"></div>
+                <div class="photo-item" style="background-image: url('zp2.jpg');"></div>
+                <div class="photo-item" style="background-image: url('zp3.jpg');"></div>
+                <div class="photo-item" style="background-image: url('zp4.jpg');"></div>
+                <div class="photo-item" style="background-image: url('zp5.jpg');"></div>
             </div>
         </div>
     </section>
@@ -113,24 +128,33 @@
             <section id="portfolio">
                 <h2 class="text-center mb-2">作品集</h2>
                 <p class="text-center text-muted mb-5">My Portfolio</p>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="作品1" class="img-fluid rounded">
+                <div class="row" id="portfolio-grid">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp1.jpg" alt="作品1" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="作品2" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp2.jpg" alt="作品2" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="作品3" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp3.jpg" alt="作品3" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="作品4" class="img-fluid rounded">
+                    <div id="quote-container" class="col-md-6 mb-4 d-flex align-items-center justify-content-center">
+                        <div>
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-0"></p>
+                                <footer class="blockquote-footer"></footer>
+                            </blockquote>
+                            <div class="emojis text-center mt-3"></div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="作品5" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp4.jpg" alt="作品4" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="作品6" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp5.jpg" alt="作品5" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp6.jpg" alt="作品6" class="img-fluid rounded">
                     </div>
                 </div>
             </section>
@@ -138,24 +162,33 @@
             <section id="gallery">
                 <h2 class="text-center mb-2">照片展示</h2>
                 <p class="text-center text-muted mb-5">Photo Gallery</p>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="照片1" class="img-fluid rounded">
+                <div class="row" id="gallery-grid">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp7.jpg" alt="照片1" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="照片2" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp8.jpg" alt="照片2" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="照片3" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp9.jpg" alt="照片3" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="照片4" class="img-fluid rounded">
+                    <div id="gallery-quote-container" class="col-md-6 mb-4 d-flex align-items-center justify-content-center">
+                        <div>
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-0"></p>
+                                <footer class="blockquote-footer"></footer>
+                            </blockquote>
+                            <div class="emojis text-center mt-3"></div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="照片5" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp10.jpg" alt="照片4" class="img-fluid rounded">
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <img src="https://via.placeholder.com/600x400" alt="照片6" class="img-fluid rounded">
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp11.jpg" alt="照片5" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-6 mb-4 portfolio-item">
+                        <img src="zp12.jpg" alt="照片6" class="img-fluid rounded">
                     </div>
                 </div>
             </section>
@@ -166,27 +199,41 @@
         <div class="container">
             <div class="row align-items-start">
                 <div class="col-md-6 contact-section">
-                    <h2 class="mb-2">联系我</h2>
-                    <p class="text-muted mb-4">Contact Me</p>
+                    <h2 class="mb-4">联系我</h2>
                     <ul class="list-unstyled contact-list">
                         <li class="mb-3"><i class="fas fa-phone fa-fw me-2"></i>电话：151-3309-9937</li>
                         <li><i class="fas fa-map-marker-alt fa-fw me-2"></i>地址：天津市西青区精武镇格调松间北里</li>
                     </ul>
                 </div>
                 <div class="col-md-6 follow-section">
-                    <h2 class="mb-2">关注我</h2>
-                    <p class="text-muted mb-4">Follow Me</p>
+                    <h2 class="mb-4">关注我</h2>
                     <div class="row">
                         <div class="col-6">
                             <ul class="list-unstyled social-links">
-                                <li class="mb-3"><a href="#" class="text-decoration-none"><i class="fab fa-weibo fa-2x me-3"></i>微博</a></li>
-                                <li><a href="#" class="text-decoration-none"><i class="fab fa-weixin fa-2x me-3"></i>微信公众号</a></li>
+                                <li class="mb-3">
+                                    <a href="#" class="text-decoration-none" id="wechat-link">
+                                        <i class="fab fa-weixin fa-2x me-3"></i>微信
+                                    </a>
+                                </li>
+                                <li><a href="#" class="text-decoration-none"><i class="fab fa-weibo fa-2x me-3"></i>微博</a></li>
                             </ul>
                         </div>
                         <div class="col-6">
                             <ul class="list-unstyled social-links">
-                                <li class="mb-3"><a href="#" class="text-decoration-none"><i class="fab fa-instagram fa-2x me-3"></i>Instagram</a></li>
+                                <li class="mb-3">
+                                    <a href="https://www.douyin.com/user/MS4wLjABAAAAS-xx4t8i_ZfoxiJcynGd_2GBE_4vj-P7_Wp2F2SwdBw?from_tab_name=main" class="text-decoration-none" target="_blank">
+                                        <i class="fab fa-tiktok fa-2x me-3"></i>抖音
+                                    </a>
+                                </li>
                                 <li><a href="#" class="text-decoration-none"><i class="fab fa-linkedin fa-2x me-3"></i>LinkedIn</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                             </ul>
                         </div>
                     </div>

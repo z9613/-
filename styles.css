@@ -16,19 +16,7 @@ body {
     padding: 20px;
 }
 
-section, .contact-section form {
-    background-color: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    margin-bottom: 30px;
-    transition: all 0.3s ease;
-}
 
-section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
 
 h2, h3 {
     font-weight: 600;
@@ -193,4 +181,663 @@ h2, h3 {
 
 #about {
     margin-top: -40px; /* 添加负的上外边距，使其向上移动 */
+}
+
+.portfolio-item {
+    transition: all 0.3s ease;
+}
+
+.portfolio-item.full-width {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+}
+
+#decorative-emojis {
+    font-size: 24px;
+    line-height: 1.5;
+    opacity: 0.5;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.emoji-item {
+    margin: 5px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+#quote-container {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px; /* 设置最小高度，确保有足够的空间 */
+}
+
+
+
+.blockquote {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 0; /* 移除默认的下边距 */
+    text-align: center;
+}
+
+.blockquote p {
+    margin-bottom: 10px; /* 在引用文本和作者之间添加一些间距 */
+}
+
+.blockquote-footer {
+    font-size: 0.9rem;
+    text-align: right;
+    color: #6c757d;
+    margin-top: 10px; /* 在作者上方添加一些间距 */
+}
+
+.blockquote-footer::before {
+    content: "\2014\00A0"; /* 添加破折号 */
+}
+
+/* 照片墙样式 */
+.photo-stack-container {
+    position: relative;
+    width: 100%;
+    height: 600px; /* 或者您想要的任何高度 */
+    overflow: hidden;
+}
+
+.photo-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* 移除之前的 hover 效果 */
+.photo-item:hover {
+    transform: none;
+    z-index: auto;
+    box-shadow: none;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#photo-stack {
+    background-color: transparent;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 0; /* 移除内边距 */
+}
+
+#photo-stack:hover {
+    transform: none;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .photo-stack-container {
+        height: 600px; /* 在小屏幕上减小高度 */
+    }
+    
+    .photo-item {
+        height: 16.66%; /* 在小屏幕上调整高度 */
+    }
+}
+
+/* 在文件末尾添加以下样式 */
+.photo-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 1);
+}
+/* 在 styles.css 文件中添加或修改以下样式 */
+
+#about .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#about .col-md-2,
+#about .col-md-4 {
+    margin-bottom: 20px;
+}
+
+.about-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+    background-color: #ffffff;
+   
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+
+
+.about-item i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.about-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.about-item ul {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.about-item ul li {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.about-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.about-item p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    #about .col-md-2,
+    #about .col-md-4 {
+        width: 100%;
+    }
+}
+#about .col-md-4 .about-item {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+#about .col-md-4 .about-item:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+#about .col-md-4 .about-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #fff;
+    box-shadow: none;
+}
+
+#about .col-md-4 .about-item p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    text-align: center;
+    max-width: 80%;
+    margin: 0 auto;
+}
+#about .col-md-4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#about .col-md-4 .about-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 300px; /* 可以根据需要调整 */
+}
+
+#about .col-md-4 .about-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#about .col-md-4 .about-item p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    text-align: center;
+    margin: 0 auto;
+}
+#about .row {
+    display: flex;
+    align-items: stretch;
+}
+
+#about .col-md-4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -20px; /* 向上移动一点 */
+    margin-bottom: -20px; /* 向下延伸一点 */
+}
+
+#about .col-md-4 .about-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 300px;
+    height: calc(100% + 40px); /* 增加高度 */
+    padding-top: 30px; /* 增加顶部内边距 */
+    padding-bottom: 30px; /* 增加底部内边距 */
+}
+
+#about .col-md-4 .about-item img {
+    width: 220px; /* 稍微增大头像尺寸 */
+    height: 220px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 25px; /* 增加头像下方的间距 */
+    border: 3px solid #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+#about .col-md-4 .about-item p {
+    font-size: 1.1rem; /* 稍微增大字体 */
+    line-height: 1.7;
+    color: #333;
+    text-align: center;
+    margin: 0 auto;
+}
+#about .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+#about .col-md-4 {
+    margin-top: -40px; /* 向上移动中间列 */
+    margin-bottom: 40px; /* 增加底部间距 */
+}
+
+#about .col-md-2 {
+    margin-top: 260px; /* 将其他四栏向下移动 */
+}
+
+#about .col-md-4 .about-item {
+    height: auto; /* 移除固定高度 */
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#about .col-md-4 .about-item img {
+    width: 240px; /* 增大头像尺寸 */
+    height: 240px;
+    margin-bottom: 30px; /* 增加头像下方的间距 */
+}
+
+#about .col-md-4 .about-item p {
+    font-size: 1.2rem; /* 增大字体 */
+    line-height: 1.8;
+    margin-bottom: 30px; /* 增加段落下方的间距 */
+}
+#about .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#about .col-md-4 {
+    margin-top: -40px;
+    margin-bottom: 20px; /* 减少底部间距 */
+}
+
+#about .col-md-2 {
+    margin-top: 20px; /* 减少顶部间距 */
+    padding: 0 10px; /* 添加一些水平内边距 */
+}
+
+#about .col-md-4 .about-item {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#about .col-md-4 .about-item img {
+    width: 200px; /* 稍微减小头像尺寸 */
+    height: 200px;
+    margin-bottom: 20px; /* 减少头像下方的间距 */
+}
+
+#about .col-md-4 .about-item p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px; /* 减少段落下方的间距 */
+}
+
+.about-item {
+    height: 100%;
+    padding: 15px; /* 减少内边距 */
+    margin-bottom: 15px; /* 减少底部外边距 */
+}
+
+.about-item h3 {
+    font-size: 1.1rem; /* 稍微减小标题字体 */
+    margin-bottom: 10px;
+}
+
+.about-item ul li {
+    font-size: 0.9rem;
+    margin-bottom: 8px; /* 减少列表项之间的间距 */
+}
+#about {
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 100px 0;
+    
+   
+    min-height: 800px; /* 设置最小高度 */
+}
+
+
+
+#about .container {
+    position: relative;
+    z-index: 2;
+}
+
+#about .about-item {
+    background-color: rgba(255, 255, 255, 0.9); /* 略微透明的白色背景 */
+}
+#about {
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 60px 0;
+ 
+    
+}
+
+
+
+
+#about .container {
+    position: relative;
+    z-index: 2;
+}
+
+#about .about-item {
+    background-color: transparent; /* 移除背景色 */
+    box-shadow: none; /* 移除阴影 */
+}
+
+/* 移除悬停效果 */
+#about .about-item:hover {
+    transform: none;
+    box-shadow: none;
+    transition: none;
+}
+#about {
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 60px 0;
+   
+   
+}
+
+
+
+#about .container {
+    position: relative;
+    z-index: 2;
+}
+
+.about-item {
+    height: 100%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+   
+    transition: all 0.3s ease;
+}
+
+.about-item i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.about-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.about-item ul {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.about-item ul li {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+#about .container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 600px; /* 设置容器的最小高度 */
+}
+
+#about .row {
+    margin-top: 40px; /* 增加行与标题之间的距离 */
+}
+
+#about .col-md-3 {
+    margin-bottom: 40px; /* 增加列之间的垂直间距 */
+}
+
+.about-item {
+    height: 100%;
+    padding: 30px; /* 增加内边距 */
+    background-color: rgba(255, 255, 255, 0.9);
+    
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.about-item h3 {
+    font-size: 1.3rem; /* 稍微增大标题字体 */
+    margin-bottom: 20px;
+}
+
+.about-item ul li {
+    font-size: 1rem; /* 增大列表项字体 */
+    margin-bottom: 12px; /* 增加列表项之间的间距 */
+    line-height: 1.6;
+}
+#about {
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 60px 0;
+  
+   
+}
+
+
+
+#about .container {
+    position: relative;
+    z-index: 2;
+}
+
+.about-item {
+    background-color: transparent;
+    box-shadow: none;
+    transition: none;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.about-item:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.about-item i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.about-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.about-item ul {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.about-item ul li {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+#about .about-item,
+#about .about-item:hover {
+    transform: none;
+    box-shadow: none;
+    transition: none;
+}
+
+#about .about-item i,
+#about .about-item h3,
+#about .about-item ul,
+#about .about-item ul li,
+#about .about-item p {
+    transition: none;
+}
+
+#about .about-item:hover i,
+#about .about-item:hover h3,
+#about .about-item:hover ul,
+#about .about-item:hover ul li,
+#about .about-item:hover p {
+    transform: none;
+}
+#about {
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 60px 0;
+    overflow: hidden; /* 确保模糊效果不会溢出 */
+}
+
+#about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit; /* 继承父元素的背景图片 */
+    backdrop-filter: blur(10px); /* 添加模糊效果 */
+    filter: blur(10px); /* 为不支持 backdrop-filter 的浏览器添加模糊效果 */
+    z-index: -2;
+}
+
+#about .container {
+    position: relative;
+    z-index: 2; /* 确保内容在模糊层之上 */
+}
+#about::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3); /* 半透明白色 */
+    z-index: 2;
+}
+#about .container,
+#about .row,
+#about .col-md-3,
+#about .col-md-4,
+#about .about-item {
+    position: relative;
+    z-index: 3;
 }
