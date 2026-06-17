@@ -77,8 +77,11 @@
         // ----------------------------------------------------
         // 安全配置核心区
         // ----------------------------------------------------
-        // 请在此处修改你的专属访问密码
-        const CORRECT_PASSWORD = "0000"; 
+        // 1. 请在此处修改你的专属访问密码
+        const CORRECT_PASSWORD = "你的密码"; 
+
+        // 2. 使用相对路径强制浏览器在当前 dashboard 文件夹下寻找 content.html
+        const TARGET_PAGE = "./content.html";
         // ----------------------------------------------------
 
         function verifyPassword(e) {
@@ -102,9 +105,13 @@
                 // 3. 将口令无感存入会话（Session），供内页安全校验，防止绕过
                 sessionStorage.setItem('workbench_auth_token', btoa(password));
 
-                // 4. 平滑跳转到真正有内容的备忘页面
+                // 4. 计算并输出目标绝对 URL 以便控制台调试路径问题
+                const targetUrl = new URL(TARGET_PAGE, window.location.href).href;
+                console.log("🔑 密码验证成功！正在跳转至: ", targetUrl);
+
+                // 5. 平滑跳转到真正有内容的备忘页面
                 setTimeout(() => {
-                    window.location.href = 'content.html';
+                    window.location.href = TARGET_PAGE;
                 }, 400);
 
             } else {
