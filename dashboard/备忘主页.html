@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Sans SC for clean SF-like typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --glass-blur: 20px;
+            --glass-opacity: 0.2;
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: background-image 0.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* Custom Apple-Style Glassmorphism */
+        .apple-glass {
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            background-color: rgba(255, 255, 255, var(--glass-opacity));
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            transition: backdrop-filter 0.2s ease, background-color 0.2s ease, border 0.2s ease;
+        }
+        /* Active item status */
+        .todo-checkbox:checked + span {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        /* Custom scrollbar for widgets */
+        .custom-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 99px;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white relative flex flex-col justify-between overflow-x-hidden p-4 sm:p-6 md:p-8 select-none">
+
+    <!-- Background Mask (for dark-mode readibility adaptation) -->
+    <div class="absolute inset-0 bg-black/15 -z-10 pointer-events-none"></div>
+
+    <!-- TOP BAR (macOS Status Bar style) -->
+    <header class="w-full max-w-6xl mx-auto flex justify-between items-center z-10 py-2 px-4 rounded-full apple-glass text-xs font-medium tracking-wide">
+        <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5 font-bold">
+                <i data-lucide="apple" class="w-3.5 h-3.5 fill-white text-white"></i>
+                <span>OS Workspace</span>
+            </span>
+            <span class="opacity-60 hidden md:inline">访客控制台</span>
+        </div>
+        
+        <!-- Interactive Controls Trigger -->
+        <div class="flex items-center gap-4">
+            <span id="system-status-msg" class="text-[10px] opacity-75 bg-white/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                系统已就绪
+            </span>
+            <button onclick="toggleCustomizer()" class="flex items-center gap-1 hover:opacity-80 transition py-1 px-2.5 rounded-lg hover:bg-white/10">
+                <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                <span>个性化背景与模糊</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CENTERED CONTENT -->
+    <main class="w-full max-w-4xl mx-auto flex flex-col items-center justify-start gap-8 my-auto z-10">
+        
+        <!-- Apple Lockscreen-style Centered Time Block -->
+        <div class="text-center select-none cursor-default py-4">
+            <div class="text-xs sm:text-sm font-semibold tracking-widest uppercase opacity-85 mb-2" id="clock-date">
+                2026年6月17日 星期三
+            </div>
+            <div class="text-7xl sm:text-8xl font-light tracking-tight text-white drop-shadow-md leading-none font-sans" id="clock-time">
+                09:00
+            </div>
+            <div class="text-xs sm:text-sm mt-3 font-medium tracking-wide opacity-75 inline-flex items-center gap-1.5" id="greeting-wrapper">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+                <span id="greeting-text">早安，主人</span>
+            </div>
+        </div>
+
+        <!-- Widgets Layout: To-Do Reminders (Center Primary) & Memo Quicknote (Secondary) -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            
+            <!-- iOS Reminders Widget (Take 2 Columns) -->
+            <div class="apple-glass rounded-[28px] p-6 md:col-span-2 flex flex-col">
+                <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-rose-500 flex items-center justify-center text-white shadow-md shadow-rose-500/20">
+                            <i data-lucide="list-todo" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-base font-bold tracking-tight">备忘与注意事项</h2>
+                            <p class="text-[10px] opacity-60">今日待办清单</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="todo-count" class="text-[10px] bg-white/15 px-2.5 py-1 rounded-full font-semibold">0项待办</span>
+                        <button onclick="clearCompletedTodos()" class="text-[10px] text-rose-300 hover:text-rose-200 transition bg-rose-500/10 px-2 py-1 rounded-md">清理完成</button>
+                    </div>
+                </div>
+
+                <!-- Add Todo Field -->
+                <form id="todo-form" class="flex gap-2 mb-4">
+                    <input type="text" id="todo-input" placeholder="输入新的待办事项或注意事项..." required
+                        class="flex-grow bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/5 focus:border-white/20 rounded-xl px-4 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none transition duration-200">
+                    <button type="submit" class="bg-white text-slate-950 hover:bg-opacity-90 rounded-xl px-4 py-2 text-xs font-bold transition duration-200 shadow-sm flex items-center gap-1">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> 添加
+                    </button>
+                </form>
+
+                <!-- Scrollable To-Do Items List -->
+                <div class="flex-grow overflow-y-auto max-h-[220px] pr-1 space-y-2 custom-scroll" id="todo-list">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Quick Note / Sticky Memo Widget (Takes 1 Column) -->
+            <div class="apple-glass rounded-[28px] p-6 flex flex-col justify-between">
+                <div class="flex flex-col h-full gap-3">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-1">
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                            </div>
+                            <span id="memo-status" class="text-[10px] opacity-50 bg-white/10 px-1.5 py-0.5 rounded">自动保存</span>
+                        </div>
+                        <span id="memo-status" class="text-[10px] opacity-50 bg-white/10 px-1.5 py-0.5 rounded">自动保存</span>
+                    </div>
+                    <!-- Text area simulating iOS Note Paper background subtly -->
+                    <textarea id="memo-textarea" placeholder="在此处键入临时的琐碎想法、账号或灵感闪现，关闭网页依然保留..." 
+                        class="w-full flex-grow bg-white/5 focus:bg-white/10 rounded-xl p-3 text-xs text-white/90 placeholder-white/30 focus:outline-none resize-none leading-relaxed border border-white/5 focus:border-white/10 transition-colors"></textarea>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- macOS FLOATING DOCK (At Bottom) -->
+    <div class="w-full max-w-lg mx-auto z-10 mt-8 mb-4">
+        <div class="apple-glass rounded-2xl px-4 py-3 flex justify-around items-center gap-3 relative shadow-2xl" id="mac-dock">
+            <!-- Dynamic Links Loaded dynamically here -->
+            <div id="dock-links-container" class="flex justify-around items-center gap-3 w-full"></div>
+            
+            <!-- Separator -->
+            <div class="h-6 w-[1px] bg-white/20 self-center"></div>
+
+            <!-- Settings Cog Button on Right of Dock -->
+            <button onclick="openLinkEditor()" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition hover:scale-110 active:scale-95 flex items-center justify-center" title="自定义快捷导航">
+                <i data-lucide="cog" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- APPLE-STYLE SLIDE-OUT CUSTOMIZER DRAWER (Top/Right or Fixed Modal for custom blur & bg) -->
+    <div id="customizer-panel" class="fixed right-4 top-16 z-50 max-w-sm w-full p-6 rounded-3xl apple-glass shadow-2xl hidden border border-white/20 transition-all duration-300">
+        <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+            <h3 class="text-sm font-bold flex items-center gap-2">
+                <i data-lucide="palette" class="text-amber-300 w-4 h-4"></i>
+                <span>个性化控制台</span>
+            </h3>
+            <button onclick="toggleCustomizer()" class="text-white/60 hover:text-white">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <div class="space-y-5 text-xs">
+            
+            <!-- Custom Blur Controller -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="opacity-70">毛玻璃模强度 (Blur)</span>
+                    <span id="blur-val" class="font-mono font-bold">20px</span>
+                </div>
+                <input type="range" id="input-blur" min="0" max="40" value="20" 
+                    class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                    oninput="adjustGlassBlur(this.value)">
+            </div>
+
+            <!-- Custom Opacity Controller -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="opacity-70">玻璃透明底色 (Opacity)</span>
+                    <span id="opacity-val" class="font-mono font-bold">20%</span>
+                </div>
+                <input type="range" id="input-opacity" min="5" max="80" value="20" 
+                    class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                    oninput="adjustGlassOpacity(this.value)">
+            </div>
+
+            <!-- Background Preset Selectors -->
+            <div class="space-y-3">
+                <span class="opacity-70 block mb-1">选择 Apple 原生壁纸预设</span>
+                <div class="grid grid-cols-4 gap-2">
+                    <button onclick="setWallpaper('sequoia')" class="h-10 rounded-lg border border-white/10 bg-cover bg-center focus:ring-2 focus:ring-white transition" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&q=50')"></button>
+                    <button onclick="setWallpaper('aurora')" class="h-10 rounded-lg border border-white/10 bg-cover bg-center focus:ring-2 focus:ring-white transition" style="background-image: url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=120&q=50')"></button>
+                    <button onclick="setWallpaper('mist')" class="h-10 rounded-lg border border-white/10 bg-cover bg-center focus:ring-2 focus:ring-white transition" style="background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=120&q=50')"></button>
+                    <button onclick="setWallpaper('minimal')" class="h-10 rounded-lg border border-white/10 bg-cover bg-center focus:ring-2 focus:ring-white transition" style="background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=120&q=50')"></button>
+                </div>
+                <div class="flex gap-2 justify-between text-[10px] text-white/50 px-1">
+                    <span>红紫极光</span>
+                    <span>幻彩流光</span>
+                    <span>炫彩霞光</span>
+                    <span>极简暗黑</span>
+                </div>
+            </div>
+
+            <!-- Custom Background URL -->
+            <div class="space-y-2 pt-1">
+                <span class="opacity-70 block">自定义背景图片链接 (URL)</span>
+                <div class="flex gap-2">
+                    <input type="url" id="custom-bg-input" placeholder="输入任何 Unsplash 或网络图片地址..." 
+                        class="flex-grow bg-white/10 border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-white/30">
+                    <button onclick="applyCustomBg()" class="bg-white text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs hover:bg-opacity-95 transition">
+                        应用
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL: Custom Dock Links Editor -->
+    <div id="link-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="apple-glass rounded-3xl max-w-md w-full p-6 border border-white/20 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+                <h3 class="text-sm font-bold flex items-center gap-2">
+                    <i data-lucide="edit-3" class="text-amber-300 w-4 h-4"></i> 自定义 Dock 快捷栏
+                </h3>
+                <button onclick="closeLinkEditor()" class="text-white/60 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3 max-h-[50vh] overflow-y-auto pr-1 custom-scroll" id="link-items-editor">
+                <!-- Loaded from state by JS -->
+            </div>
+
+            <div class="mt-6 flex justify-between items-center gap-3">
+                <button onclick="resetLinksToDefault()" class="text-[10px] text-rose-300 hover:text-rose-200 flex items-center gap-1 transition">
+                    <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 恢复默认 Dock
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="closeLinkEditor()" class="bg-white/10 hover:bg-white/15 text-white text-xs px-4 py-2 rounded-xl transition">
+                        取消
+                    </button>
+                    <button onclick="saveCustomLinks()" class="bg-white text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">
+                        保存配置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INLINE DIALOG: Help and Deployment Modal -->
+    <div id="help-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="apple-glass rounded-3xl max-w-lg w-full p-6 border border-white/20 shadow-2xl overflow-y-auto max-h-[85vh] text-sm text-white/95">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+                <h3 class="font-bold flex items-center gap-2 text-white">
+                    <i data-lucide="globe" class="w-5 h-5 text-blue-300"></i> 如何绑定我的域名？
+                </h3>
+                <button onclick="toggleHelpModal()" class="text-white/60 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-4 text-xs leading-relaxed opacity-90">
+                <p>如果你已经注册了阿里云域名，并且在本地准备好了当前页面的代码文件：</p>
+                
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+                    <h4 class="font-bold text-amber-300 text-xs mb-1">极速免费部署方法 (GitHub Pages)：</h4>
+                    <ol class="list-decimal list-inside space-y-1 text-white/70">
+                        <li>右侧代码点击下载或另存为 <code class="text-white bg-white/10 px-1 py-0.5 rounded">index.html</code></li>
+                        <li>去 GitHub 创建新仓库，将该文件上传上去</li>
+                        <li>在仓库设置 <strong class="text-white">Settings -> Pages</strong> 中添加你的自定义域名</li>
+                        <li>在阿里云控制台添加解析，配置一个指向你 GitHub 地址的 <strong class="text-white">CNAME</strong> 记录</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="mt-6 text-right">
+                <button onclick="toggleHelpModal()" class="bg-white text-slate-950 text-xs font-bold px-5 py-2 rounded-xl transition">
+                    已阅
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for UI & Live clock & Settings logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Presets wallpapers
+        const wallpaperPresets = {
+            sequoia: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80',
+            aurora: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1600&q=80',
+            mist: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1600&q=80',
+            minimal: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=1600&q=80'
+        };
+
+        // Default layout state
+        const defaultLinks = [
+            { id: 1, name: "阿里云盘", url: "https://www.aliyundrive.com/", icon: "cloud" },
+            { id: 2, name: "私人NAS", url: "http://192.168.1.100", icon: "hard-drive" },
+            { id: 3, name: "GitHub", url: "https://github.com/", icon: "github" },
+            { id: 4, name: "控制中心", url: "https://cr.console.aliyun.com/", icon: "server" }
+        ];
+
+        // Load customizer state
+        let currentSettings = JSON.parse(localStorage.getItem('apple_dashboard_settings')) || {
+            blur: 20,
+            opacity: 20,
+            wallpaper: 'sequoia',
+            customBgUrl: ''
+        };
+
+        // 1. Wallpaper & Style adjustments
+        function applySettings() {
+            // Apply Glass Blur
+            document.documentElement.style.setProperty('--glass-blur', `${currentSettings.blur}px`);
+            document.getElementById('input-blur').value = currentSettings.blur;
+            document.getElementById('blur-val').textContent = `${currentSettings.blur}px`;
+
+            // Apply Glass Opacity
+            document.documentElement.style.setProperty('--glass-opacity', currentSettings.opacity / 100);
+            document.getElementById('input-opacity').value = currentSettings.opacity;
+            document.getElementById('opacity-val').textContent = `${currentSettings.opacity}%`;
+
+            // Apply Wallpaper
+            let bgUrl = currentSettings.customBgUrl || wallpaperPresets[currentSettings.wallpaper] || wallpaperPresets['sequoia'];
+            document.body.style.backgroundImage = `url('${bgUrl}')`;
+            if (currentSettings.customBgUrl) {
+                document.getElementById('custom-bg-input').value = currentSettings.customBgUrl;
+            }
+
+            localStorage.setItem('apple_dashboard_settings', JSON.stringify(currentSettings));
+        }
+
+        window.adjustGlassBlur = function(val) {
+            currentSettings.blur = parseInt(val);
+            applySettings();
+        };
+
+        window.adjustGlassOpacity = function(val) {
+            currentSettings.opacity = parseInt(val);
+            applySettings();
+        };
+
+        window.setWallpaper = function(key) {
+            currentSettings.wallpaper = key;
+            currentSettings.customBgUrl = '';
+            document.getElementById('custom-bg-input').value = '';
+            applySettings();
+        };
+
+        window.applyCustomBg = function() {
+            const url = document.getElementById('custom-bg-input').value.trim();
+            if (url) {
+                currentSettings.customBgUrl = url;
+                currentSettings.wallpaper = '';
+                applySettings();
+            }
+        };
+
+        window.toggleCustomizer = function() {
+            const panel = document.getElementById('customizer-panel');
+            panel.classList.toggle('hidden');
+        };
+
+        // 2. Realtime Clock (Apple Style)
+        function updateClock() {
+            const now = new Date();
+            
+            // Hours & Minutes
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock-time').textContent = `${hours}:${minutes}`;
+
+            // Full Date
+            const years = now.getFullYear();
+            const months = now.getMonth() + 1;
+            const dates = now.getDate();
+            const days = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+            const dayName = days[now.getDay()];
+            document.getElementById('clock-date').textContent = `${years}年${months}月${dates}日 ${dayName}`;
+
+            // Interactive Greeting
+            const hourInt = now.getHours();
+            let greeting = "早安，今天准备做点什么？";
+            if (hourInt < 5) greeting = "夜深了，注意休息睡眠";
+            else if (hourInt < 12) greeting = "上午好，保持头脑清醒";
+            else if (hourInt < 14) greeting = "中午好，喝杯咖啡午休一下";
+            else if (hourInt < 18) greeting = "下午好，加油冲刺一下";
+            else if (hourInt < 23) greeting = "晚上好，享受闲暇的时光";
+            else greeting = "夜深了，该静心冥想准备睡觉了";
+            document.getElementById('greeting-text').textContent = greeting;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 3. To-Do Items Manager
+        const todoForm = document.getElementById('todo-form');
+        const todoInput = document.getElementById('todo-input');
+        const todoList = document.getElementById('todo-list');
+        const todoCount = document.getElementById('todo-count');
+
+        let todos = JSON.parse(localStorage.getItem('apple_dashboard_todos')) || [
+            { id: 1, text: "绑定我的个人阿里云域名，随时随地打开仪表盘", completed: false },
+            { id: 2, text: "点击右下角 Dock 栏最右侧齿轮，填入我的网盘与文件地址", completed: true },
+            { id: 3, text: "配置一天的注意事项，轻装上阵", completed: false }
+        ];
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+            if (todos.length === 0) {
+                todoList.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-8 text-white/40 border border-white/5 border-dashed rounded-2xl">
+                        <i data-lucide="check-circle" class="w-8 h-8 mb-2 stroke-1 text-emerald-400"></i>
+                        <p class="text-xs">暂无待办，一切井然有序</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                todoCount.textContent = "0项待办";
+                return;
+            }
+
+            todos.forEach(todo => {
+                const item = document.createElement('div');
+                item.className = `flex items-center justify-between p-3.5 rounded-2xl border transition duration-200 ${
+                    todo.completed ? 'bg-white/2 border-transparent opacity-60' : 'bg-white/5 border-white/5 hover:bg-white/10'
+                }`;
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 flex-grow cursor-pointer" onclick="toggleTodo(${todo.id})">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-full border-2 transition ${
+                            todo.completed ? 'bg-white border-white text-slate-900' : 'border-white/40 hover:border-white'
+                        }">
+                            ${todo.completed ? '<i data-lucide="check" class="w-3.5 h-3.5 stroke-[3]"></i>' : ''}
+                        </div>
+                        <span class="text-xs select-none ${todo.completed ? 'line-through opacity-60 font-normal' : 'font-medium'}">${escapeHtml(todo.text)}</span>
+                    </div>
+                    <button onclick="deleteTodo(${todo.id})" class="text-white/40 hover:text-rose-400 p-1 rounded-lg transition ml-2" title="删除">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                `;
+                todoList.appendChild(item);
+            });
+
+            lucide.createIcons();
+            const activeCount = todos.filter(t => !t.completed).length;
+            todoCount.textContent = `${activeCount}项待办`;
+            localStorage.setItem('apple_dashboard_todos', JSON.stringify(todos));
+        }
+
+        todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = todoInput.value.trim();
+            if (!text) return;
+            todos.unshift({ id: Date.now(), text, completed: false });
+            todoInput.value = '';
+            renderTodos();
+        });
+
+        window.toggleTodo = function(id) {
+            todos = todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo);
+            renderTodos();
+        };
+
+        window.deleteTodo = function(id) {
+            todos = todos.filter(todo => todo.id !== id);
+            renderTodos();
+        };
+
+        window.clearCompletedTodos = function() {
+            if (todos.some(t => t.completed)) {
+                todos = todos.filter(todo => !todo.completed);
+                renderTodos();
+            }
+        };
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // 4. macOS-style Dock Links Control
+        let customLinks = JSON.parse(localStorage.getItem('apple_dashboard_links')) || defaultLinks;
+
+        function renderDockLinks() {
+            const container = document.getElementById('dock-links-container');
+            container.innerHTML = '';
+
+            customLinks.forEach(link => {
+                const item = document.createElement('a');
+                item.href = link.url;
+                item.target = "_blank";
+                item.className = "p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all hover:scale-110 active:scale-95 flex flex-col items-center justify-center relative group";
+                item.innerHTML = `
+                    <i data-lucide="${link.icon}" class="w-5 h-5"></i>
+                    <!-- iOS style tooltip -->
+                    <span class="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-150 bg-black/80 backdrop-blur text-[10px] px-2 py-1 rounded-md whitespace-nowrap">${escapeHtml(link.name)}</span>
+                `;
+                container.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        window.openLinkEditor = function() {
+            const editor = document.getElementById('link-items-editor');
+            editor.innerHTML = '';
+
+            customLinks.forEach((link, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-white/5 rounded-2xl border border-white/5 space-y-2";
+                div.innerHTML = `
+                    <div class="grid grid-cols-[1fr,auto] gap-2">
+                        <input type="text" id="edit-name-${link.id}" value="${escapeHtml(link.name)}" placeholder="快捷名称" 
+                            class="bg-white/10 border border-white/5 rounded-lg px-2 py-1 text-xs text-white focus:outline-none">
+                        <select id="edit-icon-${link.id}" 
+                            class="bg-white/10 border border-white/5 rounded-lg px-1.5 py-1 text-xs text-white focus:outline-none select-none">
+                            <option value="cloud" ${link.icon==='cloud'?'selected':''} class="text-slate-900">☁️ 阿里云盘/网盘</option>
+                            <option value="hard-drive" ${link.icon==='hard-drive'?'selected':''} class="text-slate-900">💾 私人 NAS</option>
+                            <option value="github" ${link.icon==='github'?'selected':''} class="text-slate-900">💻 GitHub/代码</option>
+                            <option value="server" ${link.icon==='server'?'selected':''} class="text-slate-900">🖥️ 云服务器</option>
+                            <option value="globe" ${link.icon==='globe'?'selected':''} class="text-slate-900">🌐 常用网址</option>
+                            <option value="folder" ${link.icon==='folder'?'selected':''} class="text-slate-900">📁 备份夹</option>
+                            <option value="mail" ${link.icon==='mail'?'selected':''} class="text-slate-900">✉️ 邮箱服务</option>
+                        </select>
+                    </div>
+                    <input type="url" id="edit-url-${link.id}" value="${escapeHtml(link.url)}" placeholder="跳转地址(https://)" 
+                        class="w-full bg-white/10 border border-white/5 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none">
+                `;
+                editor.appendChild(div);
+            });
+
+            document.getElementById('link-modal').classList.remove('hidden');
+        };
+
+        window.closeLinkEditor = function() {
+            document.getElementById('link-modal').classList.add('hidden');
+        };
+
+        window.saveCustomLinks = function() {
+            customLinks = customLinks.map(link => {
+                const name = document.getElementById(`edit-name-${link.id}`).value.trim() || link.name;
+                const icon = document.getElementById(`edit-icon-${link.id}`).value;
+                const url = document.getElementById(`edit-url-${link.id}`).value.trim() || link.url;
+                return { id: link.id, name, icon, url };
+            });
+
+            localStorage.setItem('apple_dashboard_links', JSON.stringify(customLinks));
+            renderDockLinks();
+            closeLinkEditor();
+        };
+
+        window.resetLinksToDefault = function() {
+            if (confirm("确定要恢复默认 Dock 快捷栏吗？")) {
+                customLinks = JSON.parse(JSON.stringify(defaultLinks));
+                localStorage.setItem('apple_dashboard_links', JSON.stringify(customLinks));
+                renderDockLinks();
+                closeLinkEditor();
+            }
+        };
+
+        // 5. Sticky Memo Notes Auto-Save
+        const memoTextarea = document.getElementById('memo-textarea');
+        const memoStatus = document.getElementById('memo-status');
+        memoTextarea.value = localStorage.getItem('apple_dashboard_memo') || '';
+
+        let memoTimeout;
+        memoTextarea.addEventListener('input', () => {
+            memoStatus.textContent = "正在保存...";
+            clearTimeout(memoTimeout);
+            memoTimeout = setTimeout(() => {
+                localStorage.setItem('apple_dashboard_memo', memoTextarea.value);
+                memoStatus.textContent = "已保存";
+            }, 500);
+        });
+
+        // 6. Help / Instructions triggers
+        window.toggleHelpModal = function() {
+            document.getElementById('help-modal').classList.toggle('hidden');
+        };
+
+        // Run setup
+        applySettings();
+        renderTodos();
+        renderDockLinks();
+    </script>
+</body>
+</html>
