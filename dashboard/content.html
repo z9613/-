@@ -50,12 +50,42 @@
             background: rgba(255, 255, 255, 0.2);
             border-radius: 99px;
         }
+
+        /* 拟真苹果输入框摇晃动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white relative flex flex-col justify-between overflow-x-hidden p-4 sm:p-6 md:p-8 select-none">
 
     <!-- Background Mask (for dark-mode readibility adaptation) -->
     <div class="absolute inset-0 bg-black/15 -z-10 pointer-events-none"></div>
+
+    <!-- 内嵌式苹果风安全解锁屏：仅在未授权时显示，防止 JS 崩溃 -->
+    <div id="inline-lock-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 select-none overflow-hidden hidden" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-2xl"></div>
+        <div id="inline-lock-container" class="w-full max-w-sm apple-glass rounded-[32px] p-8 text-center text-white transition-all duration-500 scale-100 opacity-100 relative z-10">
+            <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-white/10 rounded-full border border-white/20 shadow-inner">
+                <i data-lucide="lock" id="inline-lock-icon" class="w-8 h-8 text-white/90 transition-transform duration-300"></i>
+            </div>
+            <h1 class="text-xl font-semibold tracking-tight mb-1">系统已锁定</h1>
+            <p class="text-xs text-white/60 mb-8 tracking-wide">请输入密码解锁您的私有工作台</p>
+            <form id="inline-login-form" onsubmit="verifyInlinePassword(event)" class="space-y-4">
+                <input type="password" id="inline-password-input" placeholder="输入访问密码" class="w-full bg-black/25 hover:bg-black/30 focus:bg-black/40 border border-white/10 focus:border-white/30 rounded-2xl px-4 py-3.5 text-sm text-center text-white placeholder-white/30 focus:outline-none transition duration-200 tracking-widest">
+                <div id="inline-error-msg" class="text-xs text-rose-300 font-medium opacity-0 transition-opacity duration-200 h-4">密码错误，请重新输入</div>
+                <button type="submit" class="w-full bg-white hover:bg-opacity-90 text-slate-900 text-sm font-semibold py-3.5 rounded-2xl transition duration-200 shadow-lg flex items-center justify-center gap-1.5">
+                    <span>解 锁</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- TOP BAR (macOS Status Bar style) -->
     <header class="w-full max-w-6xl mx-auto flex justify-between items-center z-10 py-2 px-4 rounded-full apple-glass text-xs font-medium tracking-wide">
@@ -141,7 +171,7 @@
                             <div class="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
                                 <i data-lucide="file-text" class="w-4 h-4"></i>
                             </div>
-                            <span id="memo-status" class="text-[10px] opacity-50 bg-white/10 px-1.5 py-0.5 rounded">自动保存</span>
+                            <span class="text-xs font-bold">临时便签</span>
                         </div>
                         <span id="memo-status" class="text-[10px] opacity-50 bg-white/10 px-1.5 py-0.5 rounded">自动保存</span>
                     </div>
@@ -271,42 +301,77 @@
         </div>
     </div>
 
-    <!-- INLINE DIALOG: Help and Deployment Modal -->
-    <div id="help-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-        <div class="apple-glass rounded-3xl max-w-lg w-full p-6 border border-white/20 shadow-2xl overflow-y-auto max-h-[85vh] text-sm text-white/95">
-            <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
-                <h3 class="font-bold flex items-center gap-2 text-white">
-                    <i data-lucide="globe" class="w-5 h-5 text-blue-300"></i> 如何绑定我的域名？
-                </h3>
-                <button onclick="toggleHelpModal()" class="text-white/60 hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="space-y-4 text-xs leading-relaxed opacity-90">
-                <p>如果你已经注册了阿里云域名，并且在本地准备好了当前页面的代码文件：</p>
-                
-                <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-                    <h4 class="font-bold text-amber-300 text-xs mb-1">极速免费部署方法 (GitHub Pages)：</h4>
-                    <ol class="list-decimal list-inside space-y-1 text-white/70">
-                        <li>右侧代码点击下载或另存为 <code class="text-white bg-white/10 px-1 py-0.5 rounded">index.html</code></li>
-                        <li>去 GitHub 创建新仓库，将该文件上传上去</li>
-                        <li>在仓库设置 <strong class="text-white">Settings -> Pages</strong> 中添加你的自定义域名</li>
-                        <li>在阿里云控制台添加解析，配置一个指向你 GitHub 地址的 <strong class="text-white">CNAME</strong> 记录</li>
-                    </ol>
-                </div>
-            </div>
-            <div class="mt-6 text-right">
-                <button onclick="toggleHelpModal()" class="bg-white text-slate-950 text-xs font-bold px-5 py-2 rounded-xl transition">
-                    已阅
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Scripts for UI & Live clock & Settings logic -->
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        // ----------------------------------------------------
+        // 🔐 安全校验核心区：必须放在任何代码执行之前！
+        // ----------------------------------------------------
+        // 这里的密码必须和 index.html 门控密码完全一致！
+        const CORRECT_PASSWORD = "0000"; 
+        
+        // 兼容 Unicode (中文字符) 的 Base64 安全编码函数，防止 btoa 报错
+        function safeBtoa(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        // 验证/初始化锁屏检测
+        function checkAuthorization() {
+            const token = sessionStorage.getItem('workbench_auth_token');
+            const targetToken = safeBtoa(CORRECT_PASSWORD);
+            
+            if (token !== targetToken) {
+                // 如果没有验证授权，则就地展示精美的苹果解锁屏，不抛异常崩溃
+                const inlineLock = document.getElementById('inline-lock-screen');
+                if (inlineLock) {
+                    inlineLock.classList.remove('hidden');
+                    // 自动聚焦
+                    setTimeout(() => {
+                        const input = document.getElementById('inline-password-input');
+                        if (input) input.focus();
+                    }, 100);
+                }
+            }
+        }
+
+        // 验证内页锁屏中的密码
+        window.verifyInlinePassword = function(e) {
+            e.preventDefault();
+            const inputField = document.getElementById('inline-password-input');
+            const container = document.getElementById('inline-lock-container');
+            const errorMsg = document.getElementById('inline-error-msg');
+            const lockIcon = document.getElementById('inline-lock-icon');
+            const password = inputField.value;
+
+            if (password === CORRECT_PASSWORD) {
+                errorMsg.style.opacity = '0';
+                lockIcon.style.transform = 'rotate(-15deg) scale(0.9)';
+                
+                // 写入会话授权
+                sessionStorage.setItem('workbench_auth_token', safeBtoa(password));
+                
+                // 淡出解锁大门，重现工作台
+                const inlineLock = document.getElementById('inline-lock-screen');
+                inlineLock.classList.add('transition-all', 'duration-500', 'opacity-0');
+                
+                setTimeout(() => {
+                    inlineLock.classList.add('hidden');
+                    inlineLock.classList.remove('opacity-0');
+                }, 500);
+            } else {
+                errorMsg.style.opacity = '1';
+                container.classList.add('shake');
+                inputField.value = '';
+                inputField.focus();
+                
+                setTimeout(() => {
+                    container.classList.remove('shake');
+                }, 400);
+            }
+        };
+
+        // 执行初始安全验证
+        checkAuthorization();
+        // ----------------------------------------------------
 
         // Presets wallpapers
         const wallpaperPresets = {
@@ -405,12 +470,12 @@
             // Interactive Greeting
             const hourInt = now.getHours();
             let greeting = "早安，今天准备做点什么？";
-            if (hourInt < 5) greeting = "夜深了，注意休息睡眠";
+            if (hourInt < 5) greeting = "夜深了，该静心冥想准备睡觉了";
             else if (hourInt < 12) greeting = "上午好，保持头脑清醒";
             else if (hourInt < 14) greeting = "中午好，喝杯咖啡午休一下";
-            else if (hourInt < 18) greeting = "下午好，加油冲刺一下";
+            else if (hourInt < 18) greeting = "下午好，保持高效状态";
             else if (hourInt < 23) greeting = "晚上好，享受闲暇的时光";
-            else greeting = "夜深了，该静心冥想准备睡觉了";
+            else greeting = "夜深了，注意休息睡眠";
             document.getElementById('greeting-text').textContent = greeting;
         }
         setInterval(updateClock, 1000);
@@ -594,11 +659,6 @@
                 memoStatus.textContent = "已保存";
             }, 500);
         });
-
-        // 6. Help / Instructions triggers
-        window.toggleHelpModal = function() {
-            document.getElementById('help-modal').classList.toggle('hidden');
-        };
 
         // Run setup
         applySettings();
