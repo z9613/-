@@ -304,10 +304,19 @@
     <!-- Scripts for UI & Live clock & Settings logic -->
     <script>
         // ----------------------------------------------------
-        // 🔐 安全校验核心区：必须放在任何代码执行之前！
+        // 🔐 安全校验与 URL 自动归一化：必须最先执行！
         // ----------------------------------------------------
+        // 自动补全路径末尾的斜杠，防止 GitHub Pages 相对路径解析成 404
+        (function() {
+            let path = window.location.pathname;
+            // 如果路径没有斜杠结尾，且不包含文件后缀点（说明是访问文件夹 dashboard）
+            if (!path.endsWith('/') && !path.split('/').pop().includes('.')) {
+                window.location.replace(window.location.protocol + '//' + window.location.host + path + '/' + window.location.search);
+            }
+        })();
+
         // 这里的密码必须和 index.html 门控密码完全一致！
-        const CORRECT_PASSWORD = "0000"; 
+        const CORRECT_PASSWORD = "11"; 
         
         // 兼容 Unicode (中文字符) 的 Base64 安全编码函数，防止 btoa 报错
         function safeBtoa(str) {
