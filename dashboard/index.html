@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <script>
+    // 强制补全斜杠：如果地址栏是 /dashboard，直接转到 /dashboard/
+    if (window.location.pathname.endsWith('/dashboard') && !window.location.pathname.endsWith('/')) {
+        window.location.replace(window.location.pathname + '/');
+    }
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>系统已锁定</title>
