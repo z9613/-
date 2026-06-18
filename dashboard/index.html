@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <script>
-    // 强制补全斜杠：如果地址栏是 /dashboard，直接转到 /dashboard/
-    if (window.location.pathname.endsWith('/dashboard') && !window.location.pathname.endsWith('/')) {
-        window.location.replace(window.location.pathname + '/');
-    }
-</script>
+    <script src="script.js"></script>
+<!-- 引入 SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- 引入你的逻辑文件 -->
+<script src="script.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>系统已锁定</title>
@@ -72,68 +72,5 @@
     <div class="absolute bottom-6 text-[10px] text-white/40 font-medium tracking-wider">
         <i data-lucide="shield-check" class="w-3.5 h-3.5 inline mr-1 -mt-0.5"></i> 端对端加密保护
     </div>
-
-    <script>
-        // 初始化图标
-        lucide.createIcons();
-
-        // 自动聚焦输入框
-        document.getElementById('password-input').focus();
-
-        // ----------------------------------------------------
-        // 安全配置核心区
-        // ----------------------------------------------------
-        // 1. 请在此处修改你的专属访问密码
-        const CORRECT_PASSWORD = "11"; 
-
-        // 2. 使用相对路径强制浏览器在当前 dashboard 文件夹下寻找 content.html
-        const TARGET_PAGE = "./content.html";
-        // ----------------------------------------------------
-
-        function verifyPassword(e) {
-            e.preventDefault();
-            
-            const inputField = document.getElementById('password-input');
-            const container = document.getElementById('lock-container');
-            const errorMsg = document.getElementById('error-msg');
-            const lockIcon = document.getElementById('lock-icon');
-            const password = inputField.value;
-
-            if (password === CORRECT_PASSWORD) {
-                // 1. 验证成功：切换成功视觉状态
-                errorMsg.style.opacity = '0';
-                lockIcon.style.transform = 'rotate(-15deg) scale(0.9)';
-                
-                // 2. 动效流转：出场动画
-                container.classList.remove('scale-100', 'opacity-100');
-                container.classList.add('scale-95', 'opacity-0');
-
-                // 3. 将口令无感存入会话（Session），供内页安全校验，防止绕过
-                sessionStorage.setItem('workbench_auth_token', btoa(password));
-
-                // 4. 计算并输出目标绝对 URL 以便控制台调试路径问题
-                const targetUrl = new URL(TARGET_PAGE, window.location.href).href;
-                console.log("🔑 密码验证成功！正在跳转至: ", targetUrl);
-
-                // 5. 平滑跳转到真正有内容的备忘页面
-                setTimeout(() => {
-                    window.location.href = TARGET_PAGE;
-                }, 400);
-
-            } else {
-                // 验证失败：触发苹果经典的输入框摇晃动效
-                errorMsg.style.opacity = '1';
-                container.classList.add('shake');
-                inputField.value = '';
-                inputField.focus();
-
-                // 动画结束后移除类名以便下次触发
-                setTimeout(() => {
-                    container.classList.remove('shake');
-                }, 400);
-            }
-        }
-    src="script.js"
-    </script>
 </body>
 </html>
