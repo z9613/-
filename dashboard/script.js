@@ -2,7 +2,7 @@
 // 1. 初始化 Supabase (请替换你的 API KEY)
 // ----------------------------------------------------
 const SUPABASE_URL = 'https://kcejohayjyfhpyzommmf.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_KEY = 'https://kcejohayjyfhpyzommmf.supabase.co/rest/v1/';
 const supabase = typeof supabase !== 'undefined' ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 // ----------------------------------------------------
